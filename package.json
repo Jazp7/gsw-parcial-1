@@ -1,0 +1,33 @@
+{
+  "name": "gsw-laboratorio-1",
+  "version": "1.0.0",
+  "description": "Examen corto de laboratorio - Gestión de Servidores Web",
+  "main": "index.js",
+  "scripts": {
+    "start:ej1": "ts-node codigo/ejercicio1/servidor-estatico.ts",
+    "start:ej2": "ts-node codigo/ejercicio2/servidor-express.ts",
+    "build": "tsc",
+    "dev:ej1": "ts-node-dev --respawn codigo/ejercicio1/servidor-estatico.ts",
+    "dev:ej2": "ts-node-dev --respawn codigo/ejercicio2/servidor-express.ts"
+  },
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "express",
+    "http"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.22.2",
+    "express-rate-limit": "^6.10.0",
+    "helmet": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.25",
+    "@types/node": "^20.19.43",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.6"
+  }
+}

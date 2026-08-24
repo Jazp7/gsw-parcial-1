@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeCraft · Soluciones que inspiran</title>
+  <!-- Google Fonts (Poppins) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0b0e14;
+      color: #eef2f7;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ===== PARTÍCULAS (canvas) ===== */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      /* para que no interfiera con clics */;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 18px 0;
+      background: rgba(11, 14, 20, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      z-index: 100;
+      transition: background 0.3s;
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f0c040, #f5a623);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo span {
+      font-weight: 300;
+      -webkit-text-fill-color: #eef2f7;
+      background: none;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    nav ul li a {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s, transform 0.2s;
+      position: relative;
+    }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: #f0c040;
+      transition: width 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      padding: 120px 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(240, 192, 64, 0.15);
+      border: 1px solid rgba(240, 192, 64, 0.25);
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #f0c040;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(4px);
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    .hero h1 {
+      font-size: 4.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      animation: fadeInUp 0.8s ease 0.15s both;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, #f0c040, #f7b731);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0.5rem auto 2.5rem;
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+
+    .hero .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      animation: fadeInUp 0.8s ease 0.45s both;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2.6rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      background: transparent;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f0c040, #e6a800);
+      color: #0b0e14;
+      box-shadow: 0 8px 24px rgba(240, 192, 64, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 16px 40px rgba(240, 192, 64, 0.4);
+    }
+
+    .btn-outline {
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #f0c040;
+      transform: translateY(-4px);
+    }
+
+    /* efecto ripple en botones */
+    .btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ===== SECCIÓN SERVICIOS ===== */
+    .services {
+      padding: 80px 0;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(2px);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .section-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s ease;
+    }
+
+    .section-title.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-title .highlight {
+      background: linear-gradient(135deg, #f0c040, #f7b731);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 3rem;
+      font-weight: 300;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.7s ease 0.15s;
+    }
+
+    .section-sub.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 2.5rem 1.8rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      opacity: 0;
+      transform: translateY(40px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .service-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(240, 192, 64, 0.3);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .service-card .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .service-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .service-card p {
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+      font-size: 0.95rem;
+    }
+
+    /* ===== TESTIMONIOS ===== */
+    .testimonials {
+      padding: 80px 0;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.8rem;
+      margin-top: 2rem;
+    }
+
+    .testimonial-item {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 2rem 1.8rem;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: scale(0.95);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .testimonial-item.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .testimonial-item:hover {
+      border-color: rgba(240, 192, 64, 0.2);
+      transform: scale(1.02);
+    }
+
+    .testimonial-item .author {
+      margin-top: 1rem;
+      font-weight: 600;
+      font-style: normal;
+      color: #f0c040;
+    }
+
+    .testimonial-item .author span {
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.85rem;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      padding: 40px 0 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(4px);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 300;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #f0c040;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    footer .socials {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    footer .socials a {
+      font-size: 1.2rem;
+      opacity: 0.6;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    footer .socials a:hover {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+
+    /* ===== ANIMACIONES GLOBALES ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      header .container {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      nav ul {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero h1 {
+        font-size: 2.6rem;
+      }
+
+      .hero .subtitle {
+        font-size: 1rem;
+      }
+
+      .section-title {
+        font-size: 2.2rem;
+      }
+
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        padding: 0.7rem 1.8rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0e14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #f0c040;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #dbaa2a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== CANVAS DE PARTÍCULAS ===== -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="container">
+      <div class="logo">Code<span>Craft</span></div>
+      <nav>
+        <ul>
+          <li><a href="#hero">Inicio</a></li>
+          <li><a href="#services">Servicios</a></li>
+          <li><a href="#testimonials">Testimonios</a></li>
+          <li><a href="#contact">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">Innovación &amp; tecnología</div>
+        <h1>
+          Soluciones digitales <br />
+          que <span class="highlight">transforman</span> tu negocio
+        </h1>
+        <p class="subtitle">
+          En CodeCraft desarrollamos software a la medida, con tecnología de vanguardia
+          y un enfoque centrado en el usuario.
+        </p>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="welcomeBtn">Descubre más</button>
+          <a href="#services" class="btn btn-outline">Nuestros servicios</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICIOS ===== -->
+  <section class="services" id="services">
+    <div class="container">
+      <h2 class="section-title" id="servicesTitle">
+        Nuestros <span class="highlight">servicios</span>
+      </h2>
+      <p class="section-sub" id="servicesSub">
+        Tecnología de punta para impulsar tu negocio
+      </p>
+      <div class="service-grid">
+        <div class="service-card" data-delay="0">
+          <span class="icon">🌐</span>
+          <h3>Desarrollo Web</h3>
+          <p>Aplicaciones y sitios web modernos, responsivos y escalables.</p>
+        </div>
+        <div class="service-card" data-delay="150">
+          <span class="icon">📱</span>
+          <h3>Apps Móviles</h3>
+          <p>Experiencias nativas o híbridas para iOS y Android.</p>
+        </div>
+        <div class="service-card" data-delay="300">
+          <span class="icon">☁️</span>
+          <h3>Cloud &amp; DevOps</h3>
+          <p>Infraestructura en la nube, CI/CD y automatización.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIOS ===== -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <h2 class="section-title" id="testimonialsTitle">
+        Lo que dicen <span class="highlight">nuestros clientes</span>
+      </h2>
+      <p class="section-sub" id="testimonialsSub">
+        Historias de éxito que nos inspiran
+      </p>
+      <div class="testimonial-grid">
+        <div class="testimonial-item" data-delay="0">
+          "CodeCraft transformó nuestra idea en un producto increíble. El equipo es muy profesional y atento."
+          <div class="author">— María Gómez <span>CEO de TechStart</span></div>
+        </div>
+        <div class="testimonial-item" data-delay="150">
+          "Su enfoque ágil nos permitió lanzar al mercado en tiempo récord. Muy recomendados."
+          <div class="author">— Carlos Ruiz <span>CTO de LogiSmart</span></div>
+        </div>
+        <div class="testimonial-item" data-delay="300">
+          "La calidad del código y la comunicación son excelentes. Un socio tecnológico de confianza."
+          <div class="author">— Ana Martínez <span>Directora de Innovación</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="contact">
+    <div class="container">
+      <p>&copy; 2026 CodeCraft Solutions. Todos los derechos reservados.</p>
+      <p>Contacto: <a href="mailto:info@codecraft.dev">info@codecraft.dev</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // =============================================
+    // 1. PARTÍCULAS (canvas)
+    // =============================================
+    (function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+      const NUM_PARTICLES = 120;
+      const MAX_DIST = 150;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.6;
+          this.vy = (Math.random() - 0.5) * 0.6;
+          this.radius = Math.random() * 2.5 + 1.2;
+          this.opacity = Math.random() * 0.5 + 0.3;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > width) { this.vx *= -1;
+            this.x += this.vx; }
+          if (this.y < 0 || this.y > height) { this.vy *= -1;
+            this.y += this.vy; }
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(240, 192, 64, ${this.opacity})`;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < NUM_PARTICLES; i++) {
+        particles.push(new Particle());
+      }
+
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MAX_DIST) {
+              const alpha = (1 - dist / MAX_DIST) * 0.25;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(240, 192, 64, ${alpha})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        drawLines();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // =============================================
+    // 2. RIPPLE EFFECT EN BOTONES
+    // =============================================
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        ripple.classList.add('ripple');
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // =============================================
+    // 3. BOTÓN "DESCUBRE MÁS"
+    // =============================================
+    document.getElementById('welcomeBtn').addEventListener('click', function() {
+      alert('¡Bienvenido a CodeCraft! Estamos listos para ayudarte.');
+    });
+
+    // =============================================
+    // 4. INTERSECTION OBSERVER (aparición al scroll)
+    // =============================================
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          // Si es una tarjeta o testimonio, respetamos el delay
+          const delay = parseInt(el.getAttribute('data-delay')) || 0;
+          setTimeout(() => {
+            el.classList.add('visible');
+          }, delay);
+          // Dejamos de observar una vez visible
+          observer.unobserve(el);
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    // Observamos títulos, subtítulos, tarjetas de servicio y testimonios
+    document.querySelectorAll('.section-title, .section-sub, .service-card, .testimonial-item').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Forzamos que los títulos y subtítulos sean visibles si ya están en viewport al cargar
+    // (el observer lo hará automáticamente)
+
+    // =============================================
+    // 5. LOG EN CONSOLA (sin cambios)
+    // =============================================
+    console.log('CodeCraft Landing Page mejorada · ¡Wow effect activado!');
+  </script>
+</body>
+</html>
